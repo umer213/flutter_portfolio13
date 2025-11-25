@@ -17,9 +17,12 @@ class ProfileSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    final padding = width < 600 ? 20.0 : (width < 1200 ? 40.0 : 100.0);
+
     return Container(
       key: sectionKey,
-      padding: EdgeInsets.all(isWeb ? 100 : 30),
+      padding: EdgeInsets.all(padding),
       decoration: const BoxDecoration(gradient: ProfessionalTheme.bgGradient),
       child: Center(
         child: ConstrainedBox(
@@ -84,17 +87,17 @@ class ProfileSection extends StatelessWidget {
                     }
                   }
                   return Container(
-                        padding: EdgeInsets.all(isWeb ? 50 : 30),
-                        decoration: ProfessionalTheme.glassCard(),
-                        child: Text(
-                          bio,
-                          style: Theme.of(context).textTheme.bodyLarge
-                              ?.copyWith(
-                                fontSize: isWeb ? 20 : 16,
-                                color: ProfessionalTheme.textSecondary,
-                              ),
-                        ),
-                      )
+                    padding: EdgeInsets.all(
+                        width < 600 ? 24 : (width < 1200 ? 36 : 50)),
+                    decoration: ProfessionalTheme.glassCard(),
+                    child: Text(
+                      bio,
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                            fontSize: isWeb ? 20 : 16,
+                            color: ProfessionalTheme.textSecondary,
+                          ),
+                    ),
+                  )
                       .animate(delay: 200.ms)
                       .fadeIn(duration: 800.ms)
                       .slideY(begin: 0.2, end: 0);

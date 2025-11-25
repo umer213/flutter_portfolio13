@@ -35,9 +35,12 @@ class ContactSection extends StatelessWidget {
           linkedIn = personalInfo.linkedIn;
         }
 
+        final width = MediaQuery.of(context).size.width;
+        final padding = width < 600 ? 20.0 : (width < 1200 ? 40.0 : 100.0);
+
         return Container(
           key: sectionKey,
-          padding: EdgeInsets.all(isWeb ? 100 : 30),
+          padding: EdgeInsets.all(padding),
           decoration: const BoxDecoration(
             gradient: ProfessionalTheme.bgGradient,
           ),
@@ -47,7 +50,8 @@ class ContactSection extends StatelessWidget {
                 maxWidth: isWeb ? 900 : double.infinity,
               ),
               child: Container(
-                padding: EdgeInsets.all(isWeb ? 60 : 40),
+                padding:
+                    EdgeInsets.all(width < 600 ? 30 : (width < 1200 ? 45 : 60)),
                 decoration: BoxDecoration(
                   gradient: ProfessionalTheme.primaryGradient,
                   borderRadius: BorderRadius.circular(32),

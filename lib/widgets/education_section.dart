@@ -15,9 +15,12 @@ class EducationSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    final padding = width < 600 ? 20.0 : (width < 1200 ? 40.0 : 100.0);
+
     return Container(
       key: sectionKey,
-      padding: EdgeInsets.all(isWeb ? 100 : 30),
+      padding: EdgeInsets.all(padding),
       decoration: const BoxDecoration(
         gradient: ProfessionalTheme.bgGradient,
       ),
@@ -32,7 +35,8 @@ class EducationSection extends StatelessWidget {
               _buildSectionHeader(context),
               const SizedBox(height: 50),
               Container(
-                padding: EdgeInsets.all(isWeb ? 40 : 30),
+                padding:
+                    EdgeInsets.all(width < 600 ? 20 : (width < 1200 ? 30 : 40)),
                 decoration: ProfessionalTheme.glassCard(),
                 child: Row(
                   children: [

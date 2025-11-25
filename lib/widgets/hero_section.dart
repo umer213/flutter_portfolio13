@@ -43,6 +43,10 @@ class _HeroSectionState extends State<HeroSection>
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final isSmall = size.width < 600;
+    final isMedium = size.width >= 600 && size.width < 1200;
+
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -72,44 +76,44 @@ class _HeroSectionState extends State<HeroSection>
             child: SingleChildScrollView(
               child: Padding(
                 padding: EdgeInsets.symmetric(
-                  horizontal: widget.isWeb ? 60 : 20,
-                  vertical: 40,
+                  horizontal: isSmall ? 20 : (isMedium ? 40 : 60),
+                  vertical: isSmall ? 30 : 40,
                 ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     // Profile circle with glow
                     Container(
-                          width: widget.isWeb ? 200 : 150,
-                          height: widget.isWeb ? 200 : 150,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            gradient: ProfessionalTheme.primaryGradient,
-                            boxShadow: [
-                              BoxShadow(
-                                color: ProfessionalTheme.electricBlue
-                                    .withOpacity(0.6),
-                                blurRadius: 60,
-                                spreadRadius: 20,
-                              ),
-                              BoxShadow(
-                                color: ProfessionalTheme.neonPurple.withOpacity(
-                                  0.4,
-                                ),
-                                blurRadius: 80,
-                                spreadRadius: 10,
-                                offset: const Offset(20, 20),
-                              ),
-                            ],
+                      width: isSmall ? 120 : (isMedium ? 150 : 200),
+                      height: isSmall ? 120 : (isMedium ? 150 : 200),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        gradient: ProfessionalTheme.primaryGradient,
+                        boxShadow: [
+                          BoxShadow(
+                            color:
+                                ProfessionalTheme.electricBlue.withOpacity(0.6),
+                            blurRadius: isSmall ? 40 : 60,
+                            spreadRadius: isSmall ? 10 : 20,
                           ),
-                          child: Center(
-                            child: Icon(
-                              Icons.person,
-                              size: widget.isWeb ? 100 : 70,
-                              color: ProfessionalTheme.darkBg,
-                            ),
+                          BoxShadow(
+                            color:
+                                ProfessionalTheme.neonPurple.withOpacity(0.4),
+                            blurRadius: isSmall ? 60 : 80,
+                            spreadRadius: isSmall ? 5 : 10,
+                            offset:
+                                Offset(isSmall ? 10 : 20, isSmall ? 10 : 20),
                           ),
-                        )
+                        ],
+                      ),
+                      child: Center(
+                        child: Icon(
+                          Icons.person,
+                          size: isSmall ? 60 : (isMedium ? 80 : 100),
+                          color: ProfessionalTheme.darkBg,
+                        ),
+                      ),
+                    )
                         .animate(onPlay: (controller) => controller.repeat())
                         .shimmer(
                           duration: 2000.ms,
@@ -122,7 +126,7 @@ class _HeroSectionState extends State<HeroSection>
                           end: const Offset(1, 1),
                           curve: Curves.elasticOut,
                         ),
-                    const SizedBox(height: 50),
+                    SizedBox(height: isSmall ? 30 : 50),
 
                     // Name and title from Firebase
                     StreamBuilder<QuerySnapshot>(
@@ -136,9 +140,8 @@ class _HeroSectionState extends State<HeroSection>
 
                         if (snapshot.hasData &&
                             snapshot.data!.docs.isNotEmpty) {
-                          final docData =
-                              snapshot.data!.docs[0].data()
-                                  as Map<String, dynamic>;
+                          final docData = snapshot.data!.docs[0].data()
+                              as Map<String, dynamic>;
                           final personalInfo = PersonalInfoModel.fromFirestore(
                             docData,
                           );
@@ -158,42 +161,44 @@ class _HeroSectionState extends State<HeroSection>
                           children: [
                             // Gradient text name
                             ShaderMask(
-                                  shaderCallback: (bounds) => ProfessionalTheme
-                                      .primaryGradient
-                                      .createShader(bounds),
-                                  child: Text(
-                                    displayName,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .displayLarge
-                                        ?.copyWith(
-                                          fontSize: widget.isWeb ? 72 : 48,
-                                          color: Colors.white,
-                                        ),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                )
+                              shaderCallback: (bounds) => ProfessionalTheme
+                                  .primaryGradient
+                                  .createShader(bounds),
+                              child: Text(
+                                displayName,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .displayLarge
+                                    ?.copyWith(
+                                      fontSize:
+                                          isSmall ? 32 : (isMedium ? 48 : 72),
+                                      color: Colors.white,
+                                    ),
+                                textAlign: TextAlign.center,
+                              ),
+                            )
                                 .animate(delay: 200.ms)
                                 .fadeIn(duration: 800.ms)
                                 .slideY(begin: -0.3, end: 0),
-                            const SizedBox(height: 20),
+                            SizedBox(height: isSmall ? 12 : 20),
 
                             // Title
                             Text(
-                                  displayTitle,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .headlineMedium
-                                      ?.copyWith(
-                                        fontSize: widget.isWeb ? 32 : 24,
-                                        color: ProfessionalTheme.textSecondary,
-                                      ),
-                                  textAlign: TextAlign.center,
-                                )
+                              displayTitle,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headlineMedium
+                                  ?.copyWith(
+                                    fontSize:
+                                        isSmall ? 18 : (isMedium ? 24 : 32),
+                                    color: ProfessionalTheme.textSecondary,
+                                  ),
+                              textAlign: TextAlign.center,
+                            )
                                 .animate(delay: 400.ms)
                                 .fadeIn(duration: 800.ms)
                                 .slideY(begin: 0.3, end: 0),
-                            const SizedBox(height: 12),
+                            SizedBox(height: isSmall ? 8 : 12),
 
                             // Location
                             Row(
@@ -202,13 +207,16 @@ class _HeroSectionState extends State<HeroSection>
                                 Icon(
                                   Icons.location_on,
                                   color: ProfessionalTheme.electricBlue,
-                                  size: 20,
+                                  size: isSmall ? 16 : 20,
                                 ),
                                 const SizedBox(width: 8),
                                 Text(
                                   displayLocation,
-                                  style: Theme.of(context).textTheme.bodyLarge
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyLarge
                                       ?.copyWith(
+                                        fontSize: isSmall ? 14 : 16,
                                         color: ProfessionalTheme.textMuted,
                                       ),
                                 ),
@@ -218,45 +226,47 @@ class _HeroSectionState extends State<HeroSection>
                         );
                       },
                     ),
-                    const SizedBox(height: 60),
+                    SizedBox(height: isSmall ? 40 : 60),
 
                     // CTA Buttons
                     Wrap(
-                      spacing: 20,
-                      runSpacing: 20,
+                      spacing: isSmall ? 12 : 20,
+                      runSpacing: isSmall ? 12 : 20,
                       alignment: WrapAlignment.center,
                       children: [
                         _buildGradientButton(
-                          label: '📧  Contact Me',
-                          onPressed: () => widget.onSectionTap(
-                            widget.sectionKeys['contact']!,
-                          ),
+                          label: isSmall ? '📧 Contact' : '📧  Contact Me',
+                          onPressed: () => widget
+                              .onSectionTap(widget.sectionKeys['contact']!),
+                          isSmall: isSmall,
                         ),
                         _buildOutlineButton(
-                          label: '💼  View Projects',
-                          onPressed: () => widget.onSectionTap(
-                            widget.sectionKeys['projects']!,
-                          ),
+                          label: isSmall ? '💼 Projects' : '💼  View Projects',
+                          onPressed: () => widget
+                              .onSectionTap(widget.sectionKeys['projects']!),
+                          isSmall: isSmall,
                         ),
                       ],
                     ).animate(delay: 800.ms).fadeIn(duration: 800.ms).scale(),
 
-                    const SizedBox(height: 80),
+                    SizedBox(height: isSmall ? 50 : 80),
 
                     // Scroll indicator
                     Column(
                       children: [
                         Text(
                           'Scroll to explore',
-                          style: Theme.of(context).textTheme.bodyMedium
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyMedium
                               ?.copyWith(color: ProfessionalTheme.textMuted),
                         ),
                         const SizedBox(height: 12),
                         Icon(
-                              Icons.keyboard_arrow_down,
-                              color: ProfessionalTheme.electricBlue,
-                              size: 32,
-                            )
+                          Icons.keyboard_arrow_down,
+                          color: ProfessionalTheme.electricBlue,
+                          size: 32,
+                        )
                             .animate(
                               onPlay: (controller) => controller.repeat(),
                             )
@@ -281,16 +291,17 @@ class _HeroSectionState extends State<HeroSection>
   Widget _buildGradientButton({
     required String label,
     required VoidCallback onPressed,
+    required bool isSmall,
   }) {
     return Container(
       decoration: BoxDecoration(
         gradient: ProfessionalTheme.primaryGradient,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(isSmall ? 12 : 16),
         boxShadow: [
           BoxShadow(
             color: ProfessionalTheme.electricBlue.withOpacity(0.3),
-            blurRadius: 20,
-            offset: const Offset(0, 10),
+            blurRadius: isSmall ? 15 : 20,
+            offset: Offset(0, isSmall ? 6 : 10),
           ),
         ],
       ),
@@ -299,15 +310,18 @@ class _HeroSectionState extends State<HeroSection>
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.transparent,
           shadowColor: Colors.transparent,
-          padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 24),
+          padding: EdgeInsets.symmetric(
+            horizontal: isSmall ? 24 : 40,
+            vertical: isSmall ? 16 : 24,
+          ),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(isSmall ? 12 : 16),
           ),
         ),
         child: Text(
           label,
-          style: const TextStyle(
-            fontSize: 18,
+          style: TextStyle(
+            fontSize: isSmall ? 14 : 18,
             fontWeight: FontWeight.w600,
             color: Colors.white,
           ),
@@ -319,21 +333,27 @@ class _HeroSectionState extends State<HeroSection>
   Widget _buildOutlineButton({
     required String label,
     required VoidCallback onPressed,
+    required bool isSmall,
   }) {
     return OutlinedButton(
       onPressed: onPressed,
       style: OutlinedButton.styleFrom(
-        padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 24),
+        padding: EdgeInsets.symmetric(
+          horizontal: isSmall ? 24 : 40,
+          vertical: isSmall ? 16 : 24,
+        ),
         side: BorderSide(
           color: ProfessionalTheme.electricBlue.withOpacity(0.5),
           width: 2,
         ),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(isSmall ? 12 : 16),
+        ),
       ),
       child: Text(
         label,
-        style: const TextStyle(
-          fontSize: 18,
+        style: TextStyle(
+          fontSize: isSmall ? 14 : 18,
           fontWeight: FontWeight.w600,
           color: ProfessionalTheme.electricBlue,
         ),

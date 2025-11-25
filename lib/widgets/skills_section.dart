@@ -16,9 +16,12 @@ class SkillsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    final padding = width < 600 ? 20.0 : (width < 1200 ? 40.0 : 100.0);
+
     return Container(
       key: sectionKey,
-      padding: EdgeInsets.all(isWeb ? 100 : 30),
+      padding: EdgeInsets.all(padding),
       decoration: const BoxDecoration(
         gradient: ProfessionalTheme.bgGradient,
       ),
@@ -50,12 +53,10 @@ class SkillsSection extends StatelessWidget {
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: isWeb
-                            ? (MediaQuery.of(context).size.width > 1200 ? 4 : 3)
-                            : (MediaQuery.of(context).size.width > 600 ? 3 : 2),
-                        crossAxisSpacing: 24,
-                        mainAxisSpacing: 24,
-                        childAspectRatio: 1.1,
+                        crossAxisCount: width < 600 ? 2 : (width < 900 ? 3 : 4),
+                        crossAxisSpacing: width < 600 ? 12 : 24,
+                        mainAxisSpacing: width < 600 ? 12 : 24,
+                        childAspectRatio: 1.0,
                       ),
                       itemCount: skills.length,
                       itemBuilder: (context, index) {

@@ -34,9 +34,12 @@ class _ProjectsSectionState extends State<ProjectsSection> {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    final padding = width < 600 ? 20.0 : (width < 1200 ? 40.0 : 100.0);
+
     return Container(
       key: widget.sectionKey,
-      padding: EdgeInsets.all(widget.isWeb ? 100 : 30),
+      padding: EdgeInsets.all(padding),
       decoration: const BoxDecoration(
         gradient: ProfessionalTheme.bgGradient,
       ),
@@ -121,9 +124,10 @@ class _ProjectsSectionState extends State<ProjectsSection> {
   }
 
   Widget _buildProjectCard(ProjectDataModel project, int index) {
+    final width = MediaQuery.of(context).size.width;
     return Container(
       margin: const EdgeInsets.only(bottom: 30),
-      padding: EdgeInsets.all(widget.isWeb ? 40 : 30),
+      padding: EdgeInsets.all(width < 600 ? 20 : (width < 1200 ? 30 : 40)),
       decoration: ProfessionalTheme.glassCard(),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
