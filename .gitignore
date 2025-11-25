@@ -25,7 +25,6 @@ coverage/
 flutter_export_environment.sh
 
 # Generated plugin registrant (web)
-lib/generated_plugin_registrant.dart
 
 # Web build output
 build/web/
