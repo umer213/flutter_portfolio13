@@ -1,0 +1,32 @@
+# --------------------------
+# Flutter Web-Only Git Ignore
+# --------------------------
+
+# Miscellaneous
+*.log
+*.swp
+.DS_Store
+.svn/
+
+# VS Code (optional: enable if you want to keep workspace settings)
+# .vscode/
+
+# IntelliJ / Android Studio
+*.iml
+.idea/
+
+# Flutter / Dart / Pub
+.dart_tool/
+.packages
+.pub/
+.pub-cache/
+build/
+coverage/
+flutter_export_environment.sh
+
+# Generated plugin registrant (web)
+lib/generated_plugin_registrant.dart
+
+# Web build output
+build/web/
+web_build/
