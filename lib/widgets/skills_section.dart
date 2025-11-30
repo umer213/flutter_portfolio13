@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:my_portfolio/models/personal_info_model.dart';
 import '../theme/professional_theme.dart';
 
@@ -82,7 +83,7 @@ class SkillsSection extends StatelessWidget {
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
-                color: ProfessionalTheme.electricBlue.withOpacity(0.3),
+                color: ProfessionalTheme.electricBlue.withValues(alpha: 0.3),
                 blurRadius: 20,
                 spreadRadius: 2,
               ),
@@ -106,39 +107,57 @@ class SkillsSection extends StatelessWidget {
   }
 
   Widget _buildSkillCard(BuildContext context, String skill, int index) {
+    final width = MediaQuery.of(context).size.width;
+    final isMobile = width < 600;
+    final metadata = _getSkillMetadata(skill);
+
     return Container(
-      padding: const EdgeInsets.all(24),
-      decoration: ProfessionalTheme.glassCard(),
+      padding: EdgeInsets.all(isMobile ? 12 : 20),
+      decoration: ProfessionalTheme.glassCard().copyWith(
+        border: Border.all(
+          color: metadata.color.withValues(alpha: 0.3),
+          width: 1.5,
+        ),
+      ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            padding: const EdgeInsets.all(18),
+            padding: EdgeInsets.all(isMobile ? 10 : 16),
             decoration: BoxDecoration(
-              gradient: ProfessionalTheme.accentGradient,
-              borderRadius: BorderRadius.circular(16),
+              color: metadata.color.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(isMobile ? 12 : 16),
               boxShadow: [
                 BoxShadow(
-                  color: ProfessionalTheme.cyanGlow.withOpacity(0.4),
-                  blurRadius: 20,
-                  spreadRadius: 2,
+                  color: metadata.color.withValues(alpha: 0.2),
+                  blurRadius: isMobile ? 12 : 20,
+                  spreadRadius: isMobile ? 1 : 2,
                 ),
               ],
             ),
-            child: Icon(
-              _getSkillIcon(skill),
-              color: Colors.white,
-              size: 36,
+            child: FaIcon(
+              metadata.icon,
+              color: metadata.color,
+              size: isMobile ? 24 : 32,
             ),
           ),
-          const SizedBox(height: 16),
-          Text(
-            skill,
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  color: ProfessionalTheme.textPrimary,
-                  fontWeight: FontWeight.w600,
-                ),
-            textAlign: TextAlign.center,
+          SizedBox(height: isMobile ? 8 : 12),
+          Flexible(
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                skill,
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      color: ProfessionalTheme.textPrimary,
+                      fontWeight: FontWeight.w600,
+                      fontSize: isMobile ? 14 : 18,
+                    ),
+                textAlign: TextAlign.center,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
           ),
         ],
       ),
@@ -148,28 +167,52 @@ class SkillsSection extends StatelessWidget {
         .scale(begin: const Offset(0, 0), end: const Offset(1, 1));
   }
 
-  IconData _getSkillIcon(String skill) {
-    switch (skill.toLowerCase()) {
-      case 'flutter':
-        return Icons.flutter_dash;
-      case 'android':
-      case 'android studio':
-        return Icons.android;
-      case 'mongodb':
-      case 'database':
-        return Icons.storage;
-      case 'dart':
-        return Icons.code;
-      case 'python':
-        return Icons.terminal;
-      case 'github':
-      case 'git':
-        return Icons.source;
-      case 'firebase':
-        return Icons.cloud;
-      default:
-        return Icons.star;
+  _SkillMetadata _getSkillMetadata(String skill) {
+    final s = skill.toLowerCase();
+    if (s.contains('flutter')) {
+      return const _SkillMetadata(FontAwesomeIcons.flutter, Color(0xFF02569B));
+    } else if (s.contains('dart')) {
+      // Dart icon not available in FontAwesome, using code icon
+      return const _SkillMetadata(FontAwesomeIcons.code, Color(0xFF0175C2));
+    } else if (s.contains('firebase')) {
+      return const _SkillMetadata(FontAwesomeIcons.fire, Color(0xFFFFCA28));
+    } else if (s.contains('android')) {
+      return const _SkillMetadata(FontAwesomeIcons.android, Color(0xFF3DDC84));
+    } else if (s.contains('ios') || s.contains('apple')) {
+      return const _SkillMetadata(FontAwesomeIcons.apple, Color(0xFFFFFFFF));
+    } else if (s.contains('python')) {
+      return const _SkillMetadata(FontAwesomeIcons.python, Color(0xFF3776AB));
+    } else if (s.contains('java') && !s.contains('script')) {
+      return const _SkillMetadata(FontAwesomeIcons.java, Color(0xFF007396));
+    } else if (s.contains('javascript') || s.contains('js')) {
+      return const _SkillMetadata(FontAwesomeIcons.js, Color(0xFFF7DF1E));
+    } else if (s.contains('react')) {
+      return const _SkillMetadata(FontAwesomeIcons.react, Color(0xFF61DAFB));
+    } else if (s.contains('node')) {
+      return const _SkillMetadata(FontAwesomeIcons.nodeJs, Color(0xFF339933));
+    } else if (s.contains('html')) {
+      return const _SkillMetadata(FontAwesomeIcons.html5, Color(0xFFE34F26));
+    } else if (s.contains('css')) {
+      return const _SkillMetadata(FontAwesomeIcons.css3Alt, Color(0xFF1572B6));
+    } else if (s.contains('git') || s.contains('github')) {
+      return const _SkillMetadata(FontAwesomeIcons.github, Color(0xFFF05032));
+    } else if (s.contains('docker')) {
+      return const _SkillMetadata(FontAwesomeIcons.docker, Color(0xFF2496ED));
+    } else if (s.contains('aws')) {
+      return const _SkillMetadata(FontAwesomeIcons.aws, Color(0xFFFF9900));
+    } else if (s.contains('cloud')) {
+      return const _SkillMetadata(FontAwesomeIcons.cloud, Color(0xFF4285F4));
+    } else if (s.contains('database') ||
+        s.contains('sql') ||
+        s.contains('mongo')) {
+      return const _SkillMetadata(FontAwesomeIcons.database, Color(0xFF47A248));
+    } else if (s.contains('figma')) {
+      return const _SkillMetadata(FontAwesomeIcons.figma, Color(0xFFF24E1E));
     }
+
+    // Default
+    return const _SkillMetadata(
+        FontAwesomeIcons.code, ProfessionalTheme.electricBlue);
   }
 
   Widget _buildEmptyState(BuildContext context) {
@@ -186,4 +229,11 @@ class SkillsSection extends StatelessWidget {
       ),
     );
   }
+}
+
+class _SkillMetadata {
+  final IconData icon;
+  final Color color;
+
+  const _SkillMetadata(this.icon, this.color);
 }

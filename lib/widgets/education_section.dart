@@ -47,7 +47,7 @@ class EducationSection extends StatelessWidget {
                         borderRadius: BorderRadius.circular(12),
                         boxShadow: [
                           BoxShadow(
-                            color: ProfessionalTheme.cyanGlow.withOpacity(0.3),
+                            color: ProfessionalTheme.cyanGlow.withValues(alpha: 0.3),
                             blurRadius: 15,
                             spreadRadius: 2,
                           ),
@@ -115,7 +115,7 @@ class EducationSection extends StatelessWidget {
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
-                color: ProfessionalTheme.electricBlue.withOpacity(0.3),
+                color: ProfessionalTheme.electricBlue.withValues(alpha: 0.3),
                 blurRadius: 20,
                 spreadRadius: 2,
               ),

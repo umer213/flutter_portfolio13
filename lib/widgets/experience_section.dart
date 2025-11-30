@@ -55,7 +55,7 @@ class _ExperienceSectionState extends State<ExperienceSection> {
                 future: _experienceFuture,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(
+                    return const Center(
                       child: CircularProgressIndicator(
                         color: ProfessionalTheme.electricBlue,
                       ),
@@ -99,7 +99,7 @@ class _ExperienceSectionState extends State<ExperienceSection> {
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
-                color: ProfessionalTheme.electricBlue.withOpacity(0.3),
+                color: ProfessionalTheme.electricBlue.withValues(alpha: 0.3),
                 blurRadius: 20,
                 spreadRadius: 2,
               ),
@@ -140,7 +140,7 @@ class _ExperienceSectionState extends State<ExperienceSection> {
                   borderRadius: BorderRadius.circular(12),
                   boxShadow: [
                     BoxShadow(
-                      color: ProfessionalTheme.cyanGlow.withOpacity(0.3),
+                      color: ProfessionalTheme.cyanGlow.withValues(alpha: 0.3),
                       blurRadius: 15,
                       spreadRadius: 2,
                     ),
@@ -184,32 +184,49 @@ class _ExperienceSectionState extends State<ExperienceSection> {
             ],
           ),
           const SizedBox(height: 20),
-          Row(
+          Wrap(
+            spacing: 16,
+            runSpacing: 8,
             children: [
-              Icon(
-                Icons.calendar_today,
-                size: 18,
-                color: ProfessionalTheme.textMuted,
-              ),
-              const SizedBox(width: 8),
-              Text(
-                experience.duration,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: ProfessionalTheme.textSecondary,
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(
+                    Icons.calendar_today,
+                    size: 18,
+                    color: ProfessionalTheme.textMuted,
+                  ),
+                  const SizedBox(width: 8),
+                  Flexible(
+                    child: Text(
+                      experience.duration,
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            color: ProfessionalTheme.textSecondary,
+                          ),
+                      overflow: TextOverflow.ellipsis,
                     ),
+                  ),
+                ],
               ),
-              const SizedBox(width: 24),
-              Icon(
-                Icons.location_on,
-                size: 18,
-                color: ProfessionalTheme.textMuted,
-              ),
-              const SizedBox(width: 8),
-              Text(
-                experience.location,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: ProfessionalTheme.textSecondary,
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(
+                    Icons.location_on,
+                    size: 18,
+                    color: ProfessionalTheme.textMuted,
+                  ),
+                  const SizedBox(width: 8),
+                  Flexible(
+                    child: Text(
+                      experience.location,
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            color: ProfessionalTheme.textSecondary,
+                          ),
+                      overflow: TextOverflow.ellipsis,
                     ),
+                  ),
+                ],
               ),
             ],
           ),
@@ -218,10 +235,10 @@ class _ExperienceSectionState extends State<ExperienceSection> {
             Container(
               padding: const EdgeInsets.all(24),
               decoration: BoxDecoration(
-                color: ProfessionalTheme.darkBg2.withOpacity(0.3),
+                color: ProfessionalTheme.darkBg2.withValues(alpha: 0.3),
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
-                  color: Colors.white.withOpacity(0.05),
+                  color: Colors.white.withValues(alpha: 0.05),
                   width: 1,
                 ),
               ),
@@ -252,7 +269,7 @@ class _ExperienceSectionState extends State<ExperienceSection> {
                               boxShadow: [
                                 BoxShadow(
                                   color: ProfessionalTheme.electricBlue
-                                      .withOpacity(0.5),
+                                      .withValues(alpha: 0.5),
                                   blurRadius: 6,
                                   spreadRadius: 2,
                                 ),

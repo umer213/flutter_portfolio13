@@ -40,8 +40,8 @@ class ProfileSection extends StatelessWidget {
                       borderRadius: BorderRadius.circular(16),
                       boxShadow: [
                         BoxShadow(
-                          color: ProfessionalTheme.electricBlue.withOpacity(
-                            0.3,
+                          color: ProfessionalTheme.electricBlue.withValues(
+                          alpha:   0.3,
                           ),
                           blurRadius: 20,
                           spreadRadius: 2,
@@ -93,7 +93,7 @@ class ProfileSection extends StatelessWidget {
                     child: Text(
                       bio,
                       style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                            fontSize: isWeb ? 20 : 16,
+                            fontSize: isWeb ? 20 : 14,
                             color: ProfessionalTheme.textSecondary,
                           ),
                     ),

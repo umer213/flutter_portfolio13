@@ -43,7 +43,7 @@ class ProfessionalTheme {
       useMaterial3: true,
       brightness: Brightness.dark,
       scaffoldBackgroundColor: darkBg,
-      colorScheme: ColorScheme.dark(
+      colorScheme: const ColorScheme.dark(
         primary: electricBlue,
         secondary: neonPurple,
         surface: cardBg,
@@ -114,7 +114,7 @@ class ProfessionalTheme {
         ),
       ),
       cardTheme: CardThemeData(
-        color: cardBg.withOpacity(0.5),
+        color: cardBg.withValues(alpha: 0.5),
         elevation: 0,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
       ),
@@ -137,14 +137,14 @@ class ProfessionalTheme {
     bool hasBorder = true,
   }) {
     return BoxDecoration(
-      color: (color ?? cardBg).withOpacity(0.3),
+      color: (color ?? cardBg).withValues(alpha: 0.3),
       borderRadius: BorderRadius.circular(24),
       border: hasBorder
-          ? Border.all(color: Colors.white.withOpacity(0.1), width: 1.5)
+          ? Border.all(color: Colors.white.withValues(alpha: 0.1), width: 1.5)
           : null,
       boxShadow: [
         BoxShadow(
-          color: Colors.black.withOpacity(0.2),
+          color: Colors.black.withValues(alpha: 0.2),
           blurRadius: 20,
           offset: const Offset(0, 10),
         ),
@@ -161,7 +161,7 @@ class ProfessionalTheme {
     return BoxDecoration(
       boxShadow: [
         BoxShadow(
-          color: color.withOpacity(0.5),
+          color: color.withValues(alpha: 0.5),
           blurRadius: blurRadius,
           spreadRadius: spreadRadius,
         ),

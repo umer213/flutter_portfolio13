@@ -57,7 +57,7 @@ class _ProjectsSectionState extends State<ProjectsSection> {
                 future: _projectsFuture,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(
+                    return const Center(
                       child: CircularProgressIndicator(
                         color: ProfessionalTheme.electricBlue,
                       ),
@@ -100,7 +100,7 @@ class _ProjectsSectionState extends State<ProjectsSection> {
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
-                color: ProfessionalTheme.electricBlue.withOpacity(0.3),
+                color: ProfessionalTheme.electricBlue.withValues(alpha: 0.3),
                 blurRadius: 20,
                 spreadRadius: 2,
               ),
@@ -141,7 +141,7 @@ class _ProjectsSectionState extends State<ProjectsSection> {
                   borderRadius: BorderRadius.circular(12),
                   boxShadow: [
                     BoxShadow(
-                      color: ProfessionalTheme.cyanGlow.withOpacity(0.3),
+                      color: ProfessionalTheme.cyanGlow.withValues(alpha: 0.3),
                       blurRadius: 15,
                       spreadRadius: 2,
                     ),
@@ -214,7 +214,7 @@ class _ProjectsSectionState extends State<ProjectsSection> {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: ProfessionalTheme.electricBlue.withOpacity(0.3),
+            color: ProfessionalTheme.electricBlue.withValues(alpha: 0.3),
             blurRadius: 15,
             offset: const Offset(0, 8),
           ),

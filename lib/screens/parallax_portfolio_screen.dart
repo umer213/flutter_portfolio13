@@ -57,21 +57,18 @@ class _ParallaxPortfolioScreenState extends State<ParallaxPortfolioScreen> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final isWeb = kIsWeb;
-    // Make hero section shorter on mobile for better UX
+    const isWeb = kIsWeb;
     final heroHeight = size.width < 600
-        ? size.height * 0.85 // 85% on mobile
-        : (size.width < 1200
-            ? size.height * 0.95 // 95% on tablet
-            : size.height); // Full height on desktop
+        ? size.height
+        : (size.width < 1200 ? size.height * 0.95 : size.height);
 
     return Scaffold(
       body: SingleChildScrollView(
         controller: _scrollController,
         child: Column(
           children: [
-            SizedBox(
-              height: heroHeight,
+            ConstrainedBox(
+              constraints: BoxConstraints(minHeight: heroHeight),
               child: HeroSection(
                 sectionKeys: _sectionKeys,
                 onSectionTap: _scrollToSection,

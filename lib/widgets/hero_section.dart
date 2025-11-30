@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:math' as math;
 import '../models/portfolio_data.dart';
 import '../models/personal_info_model.dart';
 import '../theme/professional_theme.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'dart:math' as math;
+import 'package:my_portfolio/utils/resume_helper.dart';
 
 class HeroSection extends StatefulWidget {
   final Map<String, GlobalKey> sectionKeys;
@@ -48,7 +49,7 @@ class _HeroSectionState extends State<HeroSection>
     final isMedium = size.width >= 600 && size.width < 1200;
 
     return Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -62,224 +63,221 @@ class _HeroSectionState extends State<HeroSection>
       child: Stack(
         children: [
           // Animated background particles
-          AnimatedBuilder(
-            animation: _controller,
-            builder: (context, child) {
-              return CustomPaint(
-                painter: ParticlePainter(_controller.value),
-                size: Size.infinite,
-              );
-            },
+          Positioned.fill(
+            child: AnimatedBuilder(
+              animation: _controller,
+              builder: (context, child) {
+                return CustomPaint(
+                  painter: ParticlePainter(_controller.value),
+                  size: Size.infinite,
+                );
+              },
+            ),
           ),
           // Content
-          Center(
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: isSmall ? 20 : (isMedium ? 40 : 60),
-                  vertical: isSmall ? 30 : 40,
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    // Profile circle with glow
-                    Container(
-                      width: isSmall ? 120 : (isMedium ? 150 : 200),
-                      height: isSmall ? 120 : (isMedium ? 150 : 200),
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        gradient: ProfessionalTheme.primaryGradient,
-                        boxShadow: [
-                          BoxShadow(
-                            color:
-                                ProfessionalTheme.electricBlue.withOpacity(0.6),
-                            blurRadius: isSmall ? 40 : 60,
-                            spreadRadius: isSmall ? 10 : 20,
-                          ),
-                          BoxShadow(
-                            color:
-                                ProfessionalTheme.neonPurple.withOpacity(0.4),
-                            blurRadius: isSmall ? 60 : 80,
-                            spreadRadius: isSmall ? 5 : 10,
-                            offset:
-                                Offset(isSmall ? 10 : 20, isSmall ? 10 : 20),
-                          ),
-                        ],
-                      ),
-                      child: Center(
-                        child: Icon(
-                          Icons.person,
-                          size: isSmall ? 60 : (isMedium ? 80 : 100),
-                          color: ProfessionalTheme.darkBg,
+          Align(
+            alignment: Alignment.center,
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: isSmall ? 20 : (isMedium ? 40 : 60),
+                vertical: isSmall ? 30 : 40,
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    width: isSmall ? 120 : (isMedium ? 150 : 200),
+                    height: isSmall ? 120 : (isMedium ? 150 : 200),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      gradient: ProfessionalTheme.primaryGradient,
+                      boxShadow: [
+                        BoxShadow(
+                          color: ProfessionalTheme.electricBlue
+                              .withValues(alpha: 0.6),
+                          blurRadius: isSmall ? 40 : 60,
+                          spreadRadius: isSmall ? 10 : 20,
                         ),
-                      ),
-                    )
-                        .animate(onPlay: (controller) => controller.repeat())
-                        .shimmer(
-                          duration: 2000.ms,
-                          color: Colors.white.withOpacity(0.3),
-                        )
-                        .animate()
-                        .fadeIn(duration: 800.ms)
-                        .scale(
-                          begin: const Offset(0, 0),
-                          end: const Offset(1, 1),
-                          curve: Curves.elasticOut,
+                        BoxShadow(
+                          color: ProfessionalTheme.neonPurple
+                              .withValues(alpha: 0.4),
+                          blurRadius: isSmall ? 60 : 80,
+                          spreadRadius: isSmall ? 5 : 10,
+                          offset: Offset(isSmall ? 10 : 20, isSmall ? 10 : 20),
                         ),
-                    SizedBox(height: isSmall ? 30 : 50),
+                      ],
+                    ),
+                    child: Center(
+                      child: Icon(
+                        Icons.person,
+                        size: isSmall ? 60 : (isMedium ? 80 : 100),
+                        color: ProfessionalTheme.darkBg,
+                      ),
+                    ),
+                  )
+                      .animate(onPlay: (controller) => controller.repeat())
+                      .shimmer(
+                        duration: 2000.ms,
+                        color: Colors.white.withValues(alpha: 0.3),
+                      )
+                      .animate()
+                      .fadeIn(duration: 800.ms)
+                      .scale(
+                        begin: const Offset(0, 0),
+                        end: const Offset(1, 1),
+                        curve: Curves.elasticOut,
+                      ),
+                  SizedBox(height: isSmall ? 30 : 50),
 
-                    // Name and title from Firebase
-                    StreamBuilder<QuerySnapshot>(
-                      stream: FirebaseFirestore.instance
-                          .collection('personal_info')
-                          .snapshots(),
-                      builder: (context, snapshot) {
-                        String displayName = PortfolioData.name;
-                        String displayTitle = PortfolioData.title;
-                        String displayLocation = PortfolioData.location;
+                  StreamBuilder<QuerySnapshot>(
+                    stream: FirebaseFirestore.instance
+                        .collection('personal_info')
+                        .snapshots(),
+                    builder: (context, snapshot) {
+                      String displayName = PortfolioData.name;
+                      String displayTitle = PortfolioData.title;
 
-                        if (snapshot.hasData &&
-                            snapshot.data!.docs.isNotEmpty) {
-                          final docData = snapshot.data!.docs[0].data()
-                              as Map<String, dynamic>;
-                          final personalInfo = PersonalInfoModel.fromFirestore(
-                            docData,
-                          );
+                      if (snapshot.hasData && snapshot.data!.docs.isNotEmpty) {
+                        final docData = snapshot.data!.docs[0].data()
+                            as Map<String, dynamic>;
+                        final personalInfo = PersonalInfoModel.fromFirestore(
+                          docData,
+                        );
 
-                          displayName = personalInfo.fullName.isNotEmpty
-                              ? personalInfo.fullName
-                              : PortfolioData.name;
-                          displayTitle = personalInfo.title.isNotEmpty
-                              ? personalInfo.title
-                              : PortfolioData.title;
-                          displayLocation = personalInfo.location.isNotEmpty
-                              ? personalInfo.location
-                              : PortfolioData.location;
-                        }
+                        displayName = personalInfo.fullName.isNotEmpty
+                            ? personalInfo.fullName
+                            : PortfolioData.name;
+                        displayTitle = personalInfo.title.isNotEmpty
+                            ? personalInfo.title
+                            : PortfolioData.title;
+                      }
 
-                        return Column(
-                          children: [
-                            // Gradient text name
-                            ShaderMask(
-                              shaderCallback: (bounds) => ProfessionalTheme
-                                  .primaryGradient
-                                  .createShader(bounds),
-                              child: Text(
-                                displayName,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .displayLarge
-                                    ?.copyWith(
-                                      fontSize:
-                                          isSmall ? 32 : (isMedium ? 48 : 72),
-                                      color: Colors.white,
-                                    ),
-                                textAlign: TextAlign.center,
-                              ),
-                            )
-                                .animate(delay: 200.ms)
-                                .fadeIn(duration: 800.ms)
-                                .slideY(begin: -0.3, end: 0),
-                            SizedBox(height: isSmall ? 12 : 20),
-
-                            // Title
-                            Text(
-                              displayTitle,
+                      return Column(
+                        children: [
+                          // Gradient text name
+                          ShaderMask(
+                            shaderCallback: (bounds) => ProfessionalTheme
+                                .primaryGradient
+                                .createShader(bounds),
+                            child: Text(
+                              displayName,
                               style: Theme.of(context)
                                   .textTheme
-                                  .headlineMedium
+                                  .displayLarge
                                   ?.copyWith(
                                     fontSize:
-                                        isSmall ? 18 : (isMedium ? 24 : 32),
-                                    color: ProfessionalTheme.textSecondary,
+                                        isSmall ? 32 : (isMedium ? 48 : 72),
+                                    color: Colors.white,
                                   ),
                               textAlign: TextAlign.center,
-                            )
-                                .animate(delay: 400.ms)
-                                .fadeIn(duration: 800.ms)
-                                .slideY(begin: 0.3, end: 0),
-                            SizedBox(height: isSmall ? 8 : 12),
-
-                            // Location
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  Icons.location_on,
-                                  color: ProfessionalTheme.electricBlue,
-                                  size: isSmall ? 16 : 20,
-                                ),
-                                const SizedBox(width: 8),
-                                Text(
-                                  displayLocation,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyLarge
-                                      ?.copyWith(
-                                        fontSize: isSmall ? 14 : 16,
-                                        color: ProfessionalTheme.textMuted,
-                                      ),
-                                ),
-                              ],
-                            ).animate(delay: 600.ms).fadeIn(duration: 800.ms),
-                          ],
-                        );
-                      },
-                    ),
-                    SizedBox(height: isSmall ? 40 : 60),
-
-                    // CTA Buttons
-                    Wrap(
-                      spacing: isSmall ? 12 : 20,
-                      runSpacing: isSmall ? 12 : 20,
-                      alignment: WrapAlignment.center,
-                      children: [
-                        _buildGradientButton(
-                          label: isSmall ? '📧 Contact' : '📧  Contact Me',
-                          onPressed: () => widget
-                              .onSectionTap(widget.sectionKeys['contact']!),
-                          isSmall: isSmall,
-                        ),
-                        _buildOutlineButton(
-                          label: isSmall ? '💼 Projects' : '💼  View Projects',
-                          onPressed: () => widget
-                              .onSectionTap(widget.sectionKeys['projects']!),
-                          isSmall: isSmall,
-                        ),
-                      ],
-                    ).animate(delay: 800.ms).fadeIn(duration: 800.ms).scale(),
-
-                    SizedBox(height: isSmall ? 50 : 80),
-
-                    // Scroll indicator
-                    Column(
-                      children: [
-                        Text(
-                          'Scroll to explore',
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyMedium
-                              ?.copyWith(color: ProfessionalTheme.textMuted),
-                        ),
-                        const SizedBox(height: 12),
-                        Icon(
-                          Icons.keyboard_arrow_down,
-                          color: ProfessionalTheme.electricBlue,
-                          size: 32,
-                        )
-                            .animate(
-                              onPlay: (controller) => controller.repeat(),
-                            )
-                            .moveY(
-                              begin: 0,
-                              end: 10,
-                              duration: 1500.ms,
-                              curve: Curves.easeInOut,
                             ),
-                      ],
-                    ).animate(delay: 1000.ms).fadeIn(duration: 800.ms),
-                  ],
-                ),
+                          )
+                              .animate(delay: 200.ms)
+                              .fadeIn(duration: 800.ms)
+                              .slideY(begin: -0.3, end: 0),
+                          SizedBox(height: isSmall ? 12 : 20),
+
+                          Text(
+                            displayTitle,
+                            style: Theme.of(context)
+                                .textTheme
+                                .headlineMedium
+                                ?.copyWith(
+                                  fontSize: isSmall ? 18 : (isMedium ? 24 : 32),
+                                  color: ProfessionalTheme.textSecondary,
+                                ),
+                            textAlign: TextAlign.center,
+                          )
+                              .animate(delay: 400.ms)
+                              .fadeIn(duration: 800.ms)
+                              .slideY(begin: 0.3, end: 0),
+                          SizedBox(height: isSmall ? 8 : 12),
+
+                          // Location
+                          // Row(
+                          //   mainAxisAlignment: MainAxisAlignment.center,
+                          //   children: [
+                          //     Icon(
+                          //       Icons.location_on,
+                          //       color: ProfessionalTheme.electricBlue,
+                          //       size: isSmall ? 16 : 20,
+                          //     ),
+                          //     const SizedBox(width: 8),
+                          //     Text(
+                          //       displayLocation,
+                          //       style: Theme.of(context)
+                          //           .textTheme
+                          //           .bodyLarge
+                          //           ?.copyWith(
+                          //             fontSize: isSmall ? 14 : 16,
+                          //             color: ProfessionalTheme.textMuted,
+                          //           ),
+                          //     ),
+                          //   ],
+                          // ).animate(delay: 600.ms).fadeIn(duration: 800.ms),
+                        ],
+                      );
+                    },
+                  ),
+                  SizedBox(height: isSmall ? 40 : 60),
+
+                  // CTA Buttons
+                  Wrap(
+                    spacing: isSmall ? 12 : 20,
+                    runSpacing: isSmall ? 12 : 20,
+                    alignment: WrapAlignment.center,
+                    children: [
+                      _buildGradientButton(
+                        label: isSmall ? '📧 Contact' : '📧  Contact Me',
+                        onPressed: () =>
+                            widget.onSectionTap(widget.sectionKeys['contact']!),
+                        isSmall: isSmall,
+                      ),
+                      _buildGradientButton(
+                        label: isSmall ? '📄 Resume' : '📄  Download Resume',
+                        onPressed: _downloadResume,
+                        isSmall: isSmall,
+                      ),
+                      _buildOutlineButton(
+                        label: isSmall ? '💼 Projects' : '💼  View Projects',
+                        onPressed: () => widget
+                            .onSectionTap(widget.sectionKeys['projects']!),
+                        isSmall: isSmall,
+                      ),
+                    ],
+                  ).animate(delay: 800.ms).fadeIn(duration: 800.ms).scale(),
+
+                  SizedBox(height: isSmall ? 50 : 80),
+
+                  // Scroll indicator
+                  Column(
+                    children: [
+                      Text(
+                        'Scroll to explore',
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyMedium
+                            ?.copyWith(color: ProfessionalTheme.textMuted),
+                      ),
+                      const SizedBox(height: 12),
+                      const Icon(
+                        Icons.keyboard_arrow_down,
+                        color: ProfessionalTheme.electricBlue,
+                        size: 32,
+                      )
+                          .animate(
+                            onPlay: (controller) => controller.repeat(),
+                          )
+                          .moveY(
+                            begin: 0,
+                            end: 10,
+                            duration: 1500.ms,
+                            curve: Curves.easeInOut,
+                          ),
+                    ],
+                  ).animate(delay: 1000.ms).fadeIn(duration: 800.ms),
+                ],
               ),
             ),
           ),
@@ -299,7 +297,7 @@ class _HeroSectionState extends State<HeroSection>
         borderRadius: BorderRadius.circular(isSmall ? 12 : 16),
         boxShadow: [
           BoxShadow(
-            color: ProfessionalTheme.electricBlue.withOpacity(0.3),
+            color: ProfessionalTheme.electricBlue.withValues(alpha: 0.3),
             blurRadius: isSmall ? 15 : 20,
             offset: Offset(0, isSmall ? 6 : 10),
           ),
@@ -343,7 +341,7 @@ class _HeroSectionState extends State<HeroSection>
           vertical: isSmall ? 16 : 24,
         ),
         side: BorderSide(
-          color: ProfessionalTheme.electricBlue.withOpacity(0.5),
+          color: ProfessionalTheme.electricBlue.withValues(alpha: 0.5),
           width: 2,
         ),
         shape: RoundedRectangleBorder(
@@ -360,6 +358,22 @@ class _HeroSectionState extends State<HeroSection>
       ),
     );
   }
+
+  Future<void> _downloadResume() async {
+    const resumePath = 'assets/umer_Resume.pdf';
+    try {
+      await downloadResume(resumePath);
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Could not open resume: $e'),
+            backgroundColor: ProfessionalTheme.pinkAccent,
+          ),
+        );
+      }
+    }
+  }
 }
 
 // Custom painter for animated particles
@@ -371,7 +385,7 @@ class ParticlePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = ProfessionalTheme.electricBlue.withOpacity(0.1);
+      ..color = ProfessionalTheme.electricBlue.withValues(alpha: 0.1);
 
     for (int i = 0; i < 50; i++) {
       final x = (i * 137.5) % size.width;

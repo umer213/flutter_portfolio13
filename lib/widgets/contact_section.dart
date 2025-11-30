@@ -57,7 +57,7 @@ class ContactSection extends StatelessWidget {
                   borderRadius: BorderRadius.circular(32),
                   boxShadow: [
                     BoxShadow(
-                      color: ProfessionalTheme.electricBlue.withOpacity(0.4),
+                      color: ProfessionalTheme.electricBlue.withValues(alpha: 0.4),
                       blurRadius: 40,
                       spreadRadius: 5,
                       offset: const Offset(0, 15),
@@ -77,7 +77,7 @@ class ContactSection extends StatelessWidget {
                     Text(
                       'Ready to bring your ideas to life',
                       style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                            color: Colors.white.withOpacity(0.9),
+                            color: Colors.white.withValues(alpha: 0.9),
                           ),
                     ).animate(delay: 100.ms).fadeIn(duration: 600.ms),
                     const SizedBox(height: 50),

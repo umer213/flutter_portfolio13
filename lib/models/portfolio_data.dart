@@ -1,5 +1,5 @@
 class PortfolioData {
-  static const String name = 'Your Name';
+  static const String name = 'Umar Bashir';
   static const String title = 'Flutter Developer';
   static const String location = 'India';
   static const String phone = '+91 9149644741';
